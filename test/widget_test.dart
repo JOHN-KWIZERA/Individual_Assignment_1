@@ -1,30 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:temp_converter/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Temperature Converter UI loads and functions', (WidgetTester tester) async {
+    // Build the Temperature Converter App
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Check if toggle buttons are present
+    expect(find.byType(ToggleButtons), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Check if text field is present
+    expect(find.byType(TextField), findsOneWidget);
+
+    // Check if Convert button is present
+    expect(find.widgetWithText(ElevatedButton, 'Convert'), findsOneWidget);
+
+    // Enter a temperature value into the input field
+    await tester.enterText(find.byType(TextField), '100');
+
+    // Tap the Convert button
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Convert'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Expect a converted value to be shown in history
+    expect(find.textContaining('=>'), findsOneWidget); // something like: "C to F: 100.0 => 212.0"
   });
 }
